@@ -91,6 +91,8 @@ This instruction shows how to modify `config.yaml` to run model at each stage (p
     python main.py
     ```
 
+If running on single GPU, please set `trainer/device` to `1`, and also set `trainer/strategy` to `auto`.
+
 ### Expected Output
 * An example of test stage result can be found in `./demo`.
 
