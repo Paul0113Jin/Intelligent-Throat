@@ -1,6 +1,6 @@
 # Wearable intelligent throat enables natural speech in stroke patients with dysarthria
 
-This repo contains the source code of [paper](https://arxiv.org/abs/2411.18266).
+This repo contains the source code of this [paper](https://arxiv.org/abs/2411.18266).
 
 ## 1. System Requirements
 
@@ -17,7 +17,7 @@ A detailed list of Python packages for installation via `pip` is provided in `re
 
 ### Operating System
 The code has been primarily tested on:
-* **Linux** Ubuntu 22.04
+* Ubuntu 22.04
 
 ### Hardware Requirements
 * **GPU:** An NVIDIA GPU compatible with CUDA is **highly recommended**
@@ -30,14 +30,14 @@ The code has been primarily tested on:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone <your-repo-url>
-    cd <your-repo-directory>
+    git clone https://github.com/Paul0113Jin/Intelligent-Throat.git
+    cd Intelligent-Throat
     ```
 2.  **Create and Activate Conda Environment:**
     ```bash
     # Example: Create environment
-    conda create --name wearable_dl_env python=3.12
-    conda activate wearable_dl_env
+    conda create --name wearable_dl python=3.12
+    conda activate wearable_dl
     ```
 3.  **Install Dependencies using pip:** Install the remaining required packages using the provided `requirements.txt` file.
     ```bash
@@ -45,22 +45,22 @@ The code has been primarily tested on:
     ```
 
 ### Typical Install Time
-* Assuming the Conda environment with Python and potentially PyTorch is already set up, installing the remaining packages via `pip` typically takes less than **5 minutes**, depending on the internet speed.
+* Assuming the Conda environment with Python and potentially PyTorch is already set up, installing the remaining packages via `pip` typically takes less than **2 minutes**, depending on the internet speed.
 
 ## 3. Run
 
-This instruction shows how to modify config.yaml file to run model at each stage (pretrain + finetune + distillation + test)
+This instruction shows how to modify `config.yaml` to run model at each stage (pretrain + finetune + distillation + test)
 
 ### Prerequisites
 * Installation completed (Step 2).
-* Preprocessed data is saved as .npy files in './processed_data' folder, or raw data is saved as .csv files in './dataset' folder.
-* Processed data should follow "stage_X.npy" or "{stage}_Y.npy" format. Raw data should follow "{stage}_raw.csv" format, where the last column of it should be the label column.
+* Preprocessed data is saved as `.npy` files in `./processed_data`, or raw data is saved as `.csv` files in `./dataset`.
+* Processed data should follow `{stage}_X.npy` or `{stage}_Y.npy` format. Raw data should follow `{stage}_raw.csv` format, where the last column of it should be the label column.
 
 ### Instructions
 1.  **Pretrain stage**
     * Set `stage: pretrain`.
     * Set `num_blocks` in `model` to `[3, 4, 23, 3]` -> ResNet 101
-    * Run the main.py:
+    * Run:
     ```bash
     python main.py
     ```
@@ -68,7 +68,7 @@ This instruction shows how to modify config.yaml file to run model at each stage
 2.  **Finetune stage**
     * Set `stage: finetune`.
     * Set `pretrained_ckpt_path` in `finetune` to the pretrained model checkpoint path from pretrain stage
-    * Run the main.py:
+    * Run:
     ```bash
     python main.py
     ```
@@ -77,7 +77,7 @@ This instruction shows how to modify config.yaml file to run model at each stage
     * Set `stage: distillation`.
     * Set `teacher_ckpt_path` in `distill` to the finetuneed model checkpoint path from finetune stage
     * Set `num_blocks` in `distill/student_model_config` to `[2, 2, 2, 2]` -> ResNet 18
-    * Run the main.py:
+    * Run:
     ```bash
     python main.py
     ```
@@ -85,7 +85,7 @@ This instruction shows how to modify config.yaml file to run model at each stage
 4.  **Test stage**
     * Set `stage: test`.
     * Set `num_blocks` in `model` to `[2, 2, 2, 2]` -> ResNet 101
-    * Set `ckpt_path` in `test` to the distilled model checkpoint path from distillation stage. This path could be any stage's checkpoint path as long as the model arch matches (e.g. num_blocks)
+    * Set `ckpt_path` in `test` to the distilled model checkpoint path from distillation stage. This path could be any stage's checkpoint path as long as the model structure matches (e.g. num_blocks)
     * Run the main.py:
     ```bash
     python main.py
