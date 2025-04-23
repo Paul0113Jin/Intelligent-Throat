@@ -9,8 +9,8 @@ lightning_logs/
 *.log
 
 # all data files
-dataset/
-preprocessed_data/
+# dataset/
+# preprocessed_data/
 
 # IDE / Editor specific files
 .vscode/
