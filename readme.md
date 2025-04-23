@@ -84,7 +84,7 @@ This instruction shows how to modify `config.yaml` to run model at each stage (p
 
 4.  **Test stage**
     * Set `stage: test`.
-    * Set `num_blocks` in `model` to `[2, 2, 2, 2]` -> ResNet 101
+    * Set `num_blocks` in `model` to `[2, 2, 2, 2]` -> ResNet 18
     * Set `ckpt_path` in `test` to the distilled model checkpoint path from distillation stage. This path could be any stage's checkpoint path as long as the model structure matches (e.g. num_blocks)
     * Run the main.py:
     ```bash
