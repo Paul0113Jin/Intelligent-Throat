@@ -1,0 +1,21 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Log files and directories
+lightning_logs/
+*.log
+
+# all data files
+dataset/
+preprocessed_data/
+
+# IDE / Editor specific files
+.vscode/
+.idea/
+
+# OS specific files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,109 @@
+# General settings
+stage: test # Options: pretrain, finetune, distill, test
+seed: 42
+
+# Data settings - Paths should be relative to main.py or absolute
+data:
+  train_data_path: dataset/pretrain_raw.csv      # Used for pretraining
+  finetune_data_path: dataset/finetune_raw.csv # Used for finetuning & distillation teacher/student labels
+  test_data_path: dataset/test_raw.csv        # Used for testing
+  dump_path: preprocessed_data             # Directory to save/load preprocessed .npy files
+  batch_size: 256
+  num_workers: 8
+  shuffle_train: True                      
+  validation_split: 0.2                  
+  normalization_method: 'quantile-zscore'
+  fill_nan: True                         
+
+# Model settings
+model:
+  name: 'ResNet'
+  d_in: 1
+  d_model: 64
+  num_blocks: [3,4,23,3]  # [3, 4, 23, 3] -> ResNet101
+                          # [2, 2, 2, 2] -> ResNet18
+                          # [3, 4, 6, 3] -> ResNet34-like
+  d_out: 48
+  dropout: 0.1
+  # class_names: ['ClassA', 'ClassB' , ......]
+
+# Trainer settings (PyTorch Lightning Trainer args)
+trainer:
+  accelerator: 'gpu'
+  devices: 4
+  strategy: 'ddp'
+  max_epochs: 50
+  precision: 32-true
+  log_every_n_steps: 10
+  deterministic: False
+
+# Stage-specific settings
+pretrain:
+  output_dir: lightning_logs/pretrain
+  checkpoint_filename: 'pretrained-epoch={epoch:02d}-val_acc={val_acc:.4f}'
+  monitor_metric: 'val_acc'
+  monitor_mode: 'max'
+  save_top_k: 1
+  early_stopping_patience: 10
+  optimizer: 'AdamW'
+  lr: 1.0e-4
+  weight_decay: 1.0e-5
+  max_epochs: 100
+  scheduler:
+    name: 'WarmupCosine'
+    warmup_fraction: 0.1    
+    total_steps: 5000        
+    eta_min: 1.0e-6
+    warmup_start_factor: 0.01
+
+finetune:
+  pretrained_ckpt_path: '' # <-- UPDATE THIS PATH
+  output_dir: lightning_logs/finetune
+  checkpoint_filename: 'finetuned-epoch={epoch:02d}-val_acc={val_acc:.4f}'
+  monitor_metric: 'val_acc'
+  monitor_mode: 'max'
+  save_top_k: 1
+  early_stopping_patience: 10
+  optimizer: 'AdamW'
+  lr: 1.0e-4
+  weight_decay: 1.0e-5
+  max_epochs: 100
+  scheduler:
+    name: 'WarmupCosine'
+    warmup_fraction: 0.1  
+    total_steps: 5000     
+    eta_min: 1.0e-6
+    warmup_start_factor: 0.01
+
+distill:
+  teacher_ckpt_path: '' # <-- UPDATE THIS PATH
+  student_model_config:
+    name: 'ResNet'
+    d_in: 1
+    d_model: 64
+    num_blocks: [2, 2, 2, 2]
+    d_out: 48
+    dropout: 0.1
+  output_dir: lightning_logs/distill_R101_to_R18
+  checkpoint_filename: 'distilled-student-R18-epoch={epoch:02d}-val_acc={val_acc:.4f}'
+  monitor_metric: 'val_acc'
+  monitor_mode: 'max'
+  save_top_k: 1
+  early_stopping_patience: 10
+  optimizer: 'AdamW'
+  lr: 1.0e-4
+  weight_decay: 1.0e-5
+  temperature: 1.0
+  alpha: 0.7
+  max_epochs: 100
+  scheduler:
+    name: 'WarmupCosine'
+    warmup_fraction: 0.1      
+    total_steps: 5000       
+    eta_min: 1.0e-6
+    warmup_start_factor: 0.01
+
+test:
+  # Which checkpoint to test? Could be finetuned or distilled
+  ckpt_path: '' # <-- UPDATE THIS PATH
+  output_dir: lightning_logs/test_distilled_R18

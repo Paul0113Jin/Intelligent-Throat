@@ -1,0 +1,24 @@
+# requirements.txt
+# Use this file with pip: pip install -r requirements.txt
+# Or within a conda env: conda install --yes --file requirements.txt (less common)
+# Or more commonly: conda activate your_env && pip install -r requirements.txt
+
+# --- Core ML Libraries ---
+# Specify versions based on your working environment for reproducibility
+# Example: torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0, make sure torch version compatiable with your cuda driver
+# Get PyTorch install command from: https://pytorch.org/get-started/locally/
+torch
+torchvision
+torchaudio
+pytorch-lightning
+torchmetrics
+
+# --- Data Handling & Utilities ---
+pandas
+numpy
+pyyaml
+scikit-learn
+
+# --- Plotting ---
+matplotlib
+seaborn
